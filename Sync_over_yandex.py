@@ -52,9 +52,8 @@ def sync_folder(folder_settings:dict,folder_disk_info:dict)->bool:
             if os.path.isfile(local_file)==False or modified_file_local<modified_file_disk:
                download_file_from_disk(file_dict['file'],local_file,modified_file_disk)
       if folder_settings['delete_extra_files']=='yes':
-         filenames_disk_list=get_list_elements_for_field(files_disk_list,'name')
          for file in files_local_list:
-            if file not in filenames_disk_list:
+            if fnmatch.fnmatch(file,folder_settings['mask'])==False:
                os.remove(folder_settings['local_folder']+'\\'+file)
    except Exception as ex:
       logging.critical(f"Не удалось синхронизировать папку")
